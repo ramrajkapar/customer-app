@@ -127,7 +127,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-8 offset-sm-3">
-                        <button type="submit" class="btn btn-primary">Sign in</button>
+                        <button type="button" class="btn btn-primary" id="create_customer">Create</button>
                     </div>
                 </div>
         </div>
@@ -148,6 +148,9 @@
 
 @section('js')
 <script>
-    console.log('Hi!');
+    $('#create_customer').on('click',function(e){
+        e.preventDefault();
+        alert('clicked');
+    })
 </script>
 @stop
