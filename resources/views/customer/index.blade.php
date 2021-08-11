@@ -52,7 +52,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form>
+            <form id="customer_form" method="post">
                 <div class="modal-body">
                     <div class="form-group row">
                         <label for="inputEmail" class="col-sm-3 col-form-label">First Name</label>
@@ -91,49 +91,49 @@
                     <div class="form-group row">
                         <label for="inputEmail" class="col-sm-3 col-form-label">Select City</label>
                         <div class="col-sm-8">
-                        <select class="form-control" id="city_id" name="city_id">
-                            
+                            <select class="form-control" id="city_id" name="city_id">
+
                                 <option value="1">kathamandu</option>
                                 <option value="3">pokhara</option>
                                 <option value="3">biratnagar</option>
                                 <option value="4">janakpur</option>
                                 <option value="5">birganj</option>
-                        </select>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group row">
-                    <label for="inputEmail" class="col-sm-3 col-form-label">Full Address</label>
-                    <div class="col-sm-8">
-                        <textarea class="form-control" id="address" name="address" rows="3" placeholder="Full Address"></textarea>
+                    <div class="form-group row">
+                        <label for="inputEmail" class="col-sm-3 col-form-label">Full Address</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" id="address" name="address" rows="3" placeholder="Full Address"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail" class="col-sm-3 col-form-label">GPS LAT</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="gps_lat" name="gps_lat" placeholder="GPS latitude " required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail" class="col-sm-3 col-form-label">GPS LONG</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="gps_long" name="gps_long" placeholder="GPs longitude" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-8 offset-sm-3">
+                            <label class="form-check-label"><input type="checkbox"> Remember me</label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-8 offset-sm-3">
+                            <button type="submit" class="btn btn-primary" id="create_customer">Create</button>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label for="inputEmail" class="col-sm-3 col-form-label">GPS LAT</label>
-                    <div class="col-sm-8">
-                        <input type="email" class="form-control" id="gps_lat" name="gps_lat" placeholder="GPS latitude " required>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="inputEmail" class="col-sm-3 col-form-label">GPS LONG</label>
-                    <div class="col-sm-8">
-                        <input type="email" class="form-control" id="gps_long" name="gps_long" placeholder="GPs longitude" required>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-8 offset-sm-3">
-                        <label class="form-check-label"><input type="checkbox"> Remember me</label>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-8 offset-sm-3">
-                        <button type="button" class="btn btn-primary" id="create_customer">Create</button>
-                    </div>
-                </div>
+            </form>
         </div>
-        </form>
     </div>
-</div>
 </div>
 @stop
 
@@ -148,9 +148,44 @@
 
 @section('js')
 <script>
-    $('#create_customer').on('click',function(e){
+    $('#customer_form').on('submit', function(e) {
         e.preventDefault();
-        alert('clicked');
+        // alert('clicked');
+        // console.log($('#customer_form').serialize());
+        // return false;
+        // var formdata = new FormData(this);
+        // // formdata.append('_token', "{{csrf_token()}}");
+        // console.log(formdata);
+        $.ajax({
+            type: "POST",
+            url: "{{route('customer.store.api')}}",
+            data: {
+                "first_name": $('#first_name').val(),
+                "last_name": $('#last_name').val(),
+                "dob": $('#dob').val(),
+                "contact_no": $('#contact_no').val(),
+                "country_id": $('#country_id').val(),
+                "city_id": $('#city_id').val(),
+                "address": $('#address').val(),
+                "gps_lat": $('#gps_lat').val(),
+                "gps_long": $('#gps_long').val(),
+                "_token": "{{csrf_token()}}"
+            },
+            dataType: "json",
+
+            success: function(obj) {
+                $(obj.datalists.institutes).each(function() {
+                    $("#university_id").append("<option value=\"" + this.id + "\">" + this.university_name + "</option>");
+                });
+            },
+            error: function(errors) {
+                var obj = errors.responseJSON.errors;
+                $.each(obj, function(key, value) {
+                    $(`#${key}-error`).html(value);
+                    $(`#${key}-error`).css('display', 'block');
+                });
+            }
+        });
     })
 </script>
 @stop
