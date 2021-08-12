@@ -18,9 +18,20 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => '/customers', 'middleware' => ['auth:api']], function(){
+// Route::group(['prefix' => '/customers', 'middleware' => ['auth:api']], function(){
+
+//     Route::post('/store', [App\Http\Controllers\CustomerController::class, 'storeCustomers'])->name('customer.store.api');
+//     // Route::post('/store',[ItemController::class,'store']);
+//     // Route::put('/{id}',[ItemController::class,'update']);
+//     // Route::delete('/{id}',[ItemController::class,'destory']);
+// });
+
+Route::group(['prefix' => '/customers'], function(){
 
     Route::post('/store', [App\Http\Controllers\CustomerController::class, 'storeCustomers'])->name('customer.store.api');
+    Route::get('/list', [App\Http\Controllers\CustomerController::class, 'getCustomerList'])->name('customer.list.api'); 
+    Route::post('/customer', [App\Http\Controllers\CustomerController::class, 'getCustomerById'])->name('customer.get.api'); 
+    Route::post('/remove', [App\Http\Controllers\CustomerController::class, 'deleteCustomerById'])->name('customer.remove.api');
     // Route::post('/store',[ItemController::class,'store']);
     // Route::put('/{id}',[ItemController::class,'update']);
     // Route::delete('/{id}',[ItemController::class,'destory']);
