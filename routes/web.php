@@ -21,6 +21,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/dashboard', [App\Http\Controllers\CustomerController::class, 'dashboard'])->name('customer.dashboard');
-Route::get('/customers', [App\Http\Controllers\CustomerController::class, 'index'])->name('customer.index');
+Route::get('/customers', [App\Http\Controllers\CustomerController::class, 'index'])->name('customer.index'); 
+Route::get('/customers/sort', [App\Http\Controllers\CustomerController::class, 'getCustomerSort'])->name('customer.sort');
 
 Route::post('/customers', [App\Http\Controllers\CustomerController::class, 'storeCustomers'])->name('customer.store');

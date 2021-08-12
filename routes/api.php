@@ -31,7 +31,8 @@ Route::group(['prefix' => '/customers'], function(){
     Route::post('/store', [App\Http\Controllers\CustomerController::class, 'storeCustomers'])->name('customer.store.api');
     Route::get('/list', [App\Http\Controllers\CustomerController::class, 'getCustomerList'])->name('customer.list.api'); 
     Route::post('/customer', [App\Http\Controllers\CustomerController::class, 'getCustomerById'])->name('customer.get.api'); 
-    Route::post('/remove', [App\Http\Controllers\CustomerController::class, 'deleteCustomerById'])->name('customer.remove.api');
+    Route::post('/remove', [App\Http\Controllers\CustomerController::class, 'deleteCustomerById'])->name('customer.remove.api'); 
+    Route::post('/sort', [App\Http\Controllers\CustomerController::class, 'sortCustomerByLatLong'])->name('customer.sort.api');
     // Route::post('/store',[ItemController::class,'store']);
     // Route::put('/{id}',[ItemController::class,'update']);
     // Route::delete('/{id}',[ItemController::class,'destory']);
