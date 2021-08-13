@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-<h1>Dashboard</h1>
+<h1>Customers</h1>
 @stop
 
 @section('content')
@@ -78,8 +78,6 @@
                         <div class="col-sm-8">
                             <select class="form-control" id="country_id" name="country_id">
                                 <option value="1">Nepal</option>
-                                <option value="3">India</option>
-                                <option value="3">China</option>
                             </select>
                         </div>
                     </div>
@@ -88,8 +86,8 @@
                         <div class="col-sm-8">
                             <select class="form-control" id="city_id" name="city_id">
 
-                                <option value="1">kathamandu</option>
-                                <option value="3">pokhara</option>
+                                <option value="1">kathmandu</option>
+                                <option value="2">pokhara</option>
                                 <option value="3">biratnagar</option>
                                 <option value="4">janakpur</option>
                                 <option value="5">birganj</option>
@@ -116,9 +114,6 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-sm-8 offset-sm-3">
-                            <label class="form-check-label"><input type="checkbox"> Remember me</label>
-                        </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-8 offset-sm-3">
@@ -226,7 +221,7 @@
 @stop
 
 @section('css')
-<link rel="stylesheet" href="/css/admin_custom.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
 <style>
     .bs-example {
         margin: 30px;
@@ -249,7 +244,8 @@
             processing: true,
             serverSide: true,
             ajax: "{{ route('customer.list.api') }}",
-            columns: [{
+            columns: [
+                {
                     data: 'id',
                     name: 'id'
                 },
@@ -270,12 +266,12 @@
                     name: 'contact_no'
                 },
                 {
-                    data: 'country_id',
-                    name: 'country_id'
+                    data: 'country_name',
+                    name: 'country_name'
                 },
                 {
-                    data: 'city_id',
-                    name: 'city_id'
+                    data: 'city_name',
+                    name: 'city_name'
                 },
                 {
                     data: 'gps_lat',
@@ -323,20 +319,13 @@
             dataType: "json",
 
             success: function(obj) {
-                console.log(obj);
+                // console.log(obj);
                 if (obj.success) {
                     window.location.reload();
                 }
-                // $(obj.datalists.institutes).each(function() {
-                //     $("#university_id").append("<option value=\"" + this.id + "\">" + this.university_name + "</option>");
-                // });
             },
             error: function(errors) {
-                // var obj = errors.responseJSON.errors;
-                // $.each(obj, function(key, value) {
-                //     $(`#${key}-error`).html(value);
-                //     $(`#${key}-error`).css('display', 'block');
-                // });
+
             }
         });
     })
@@ -352,7 +341,7 @@
             dataType: "json",
 
             success: function(obj) {
-                console.log(obj);
+                // console.log(obj);
                 $('#customer_id').val(obj.data.id),
                     $('#first_name').val(obj.data.first_name),
                     $('#last_name').val(obj.data.last_name),
@@ -366,11 +355,7 @@
                     $('#createCustomerModal').modal('show');
             },
             error: function(errors) {
-                // var obj = errors.responseJSON.errors;
-                // $.each(obj, function(key, value) {
-                //     $(`#${key}-error`).html(value);
-                //     $(`#${key}-error`).css('display', 'block');
-                // });
+            
             }
         });
     })

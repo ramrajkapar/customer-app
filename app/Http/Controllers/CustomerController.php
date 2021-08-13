@@ -39,7 +39,10 @@ class CustomerController extends Controller
     }
     public function getCustomerList(Request $request)
     {
-        $data = Customer::all();
+        $data = Customer::join('countries', 'countries.id', '=', 'customers.country_id')
+        ->join('cities', 'cities.id', '=', 'customers.city_id')
+        ->select('customers.*','countries.name AS country_name','cities.name AS city_name')
+        ->get();
         return Datatables::of($data)
             // ->addIndexColumn()
             ->addColumn('action', function ($row) {
@@ -82,13 +85,18 @@ class CustomerController extends Controller
     public function sortCustomerByLatLong(Request $request)
     {
         //dd($request->all());
-        $customers = Customer::all()->toArray();
+        // $customers = Customer::all()->toArray();
+        $customers = Customer::join('countries', 'countries.id', '=', 'customers.country_id')
+                            ->join('cities', 'cities.id', '=', 'customers.city_id')
+                            ->select('customers.*','countries.name AS country_name','cities.name AS city_name')
+                            ->get()
+                            ->toArray();
         foreach($customers as $key=>$customer){
             // $customer->put('test', 'test');
-            $this->distance($customer[''], $customer, $r ,$customers[$key]['gps_lat'] = $customer['id'];
-equest->latitude, $request->longitude, 'M');
-            $customers[$key]['gps_lat'] = $customer['id'];
+            $distance = $this->distance($customers[$key]['gps_lat'],$customers[$key]['gps_long'],$request->latitude, $request->longitude, 'M');
+            $customers[$key]['distance'] = $distance;
         }
+        usort($customers, array('self','sortByDistance'));
         return Datatables::of($customers)
             // ->addIndexColumn()
             ->addColumn('action', function ($row) {
@@ -97,8 +105,12 @@ equest->latitude, $request->longitude, 'M');
             })
             ->rawColumns(['action'])
             ->make(true);
-        // dd($customers);
     }
+
+    private static function sortByDistance($a, $b) {
+        return (int) ($a['distance'] > $b['distance']);
+    }
+
     private function distance($lat1, $lon1, $lat2, $lon2, $unit) {
         if (($lat1 == $lat2) && ($lon1 == $lon2)) {
           return 0;
